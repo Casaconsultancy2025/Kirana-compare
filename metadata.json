@@ -1,0 +1,5 @@
+{
+  "name": "Kirana Compare",
+  "description": "An application that allows users to upload a product image and name to get a comprehensive analysis of prices, platform availability, delivery times, and quality ratings from various online stores.",
+  "requestFramePermissions": []
+}
