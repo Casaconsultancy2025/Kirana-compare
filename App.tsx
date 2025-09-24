@@ -6,13 +6,15 @@ import { AnalysisPrompt } from './components/AnalysisPrompt';
 import { ResultCard } from './components/ResultCard';
 import { PriceIcon, TimeIcon, StarIcon, PlatformIcon } from './components/Icons';
 import { analyzeProduct } from './services/geminiService';
-import { AnalysisResult } from './types';
+import { AnalysisResult, GroundingSource } from './types';
+import { SourcesDisplay } from './components/SourcesDisplay';
 
 const App: React.FC = () => {
     const [productName, setProductName] = useState('');
     const [productImage, setProductImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+    const [sources, setSources] = useState<GroundingSource[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -34,6 +36,7 @@ const App: React.FC = () => {
         setIsLoading(true);
         setError(null);
         setAnalysisResult(null);
+        setSources([]);
 
         try {
             const base64Data = imagePreview.split(',')[1];
@@ -41,7 +44,8 @@ const App: React.FC = () => {
                 throw new Error("Invalid image data.");
             }
             const result = await analyzeProduct(base64Data, productImage.type, productName);
-            setAnalysisResult(result);
+            setAnalysisResult(result.analysis);
+            setSources(result.sources);
         } catch (e: any) {
             console.error(e);
             setError(e.message || "Failed to analyze the product. Please try again.");
@@ -110,6 +114,9 @@ const App: React.FC = () => {
                         </div>
                     </div>
                 </div>
+                {sources.length > 0 && !isLoading && (
+                    <SourcesDisplay sources={sources} />
+                )}
             </main>
         </div>
     );

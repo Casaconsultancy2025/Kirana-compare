@@ -5,3 +5,8 @@ export interface AnalysisResult {
   qualityRatings: string;
   platformAvailability: string;
 }
+
+export interface GroundingSource {
+  uri: string;
+  title: string;
+}
